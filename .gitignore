@@ -1,4 +1,3 @@
-.vscode/**
 logo/*.blend*
 logo/logo_render*.png
 logo/*.psd
@@ -14,3 +13,4 @@ Packages/
 src/Packages/
 src/wally.lock
 build/
+sourcemap.json
