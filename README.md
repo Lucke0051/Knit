@@ -8,6 +8,7 @@ Similarly to [services] and [controllers], this fork implements a new concept, m
 Current manager limitations:
 - No direct client <-> (nor ->) manager communication
 - Managers do not fully respect the ``KnitInit`` & ``KnitStart`` lifecycle
+- Methods are first "connected" in serial (rather than ``:ConnectParallel``) which requires the user to call ``task.synchronize()``. This also results in more context switches than needed.
 
 ### Lifecycle
 (Registration & creation are used interchangeably)
