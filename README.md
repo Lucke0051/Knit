@@ -1,0 +1,1 @@
+Knit is a lightweight game framework. This version is an experimental version with parallelization support. Original framework can be found at [sleitnick/knit](https://github.com/Sleitnick/Knit).

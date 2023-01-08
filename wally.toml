@@ -1,6 +1,6 @@
 [package]
 name = "lucke0051/knit"
-description = "Knit is a lightweight game framework. This version is an experimental version with parallelization support."
+description = "Knit is a lightweight game framework. This version is an experimental version with parallelization support. Original framework can be found at sleitnick/knit."
 version = "1.0.1"
 license = "MIT"
 registry = "https://github.com/UpliftGames/wally-index"
