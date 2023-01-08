@@ -4,7 +4,6 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local ExampleService = Knit.CreateService({
 	Name = "ExampleService",
-	Client = {},
 })
 
 function ExampleService:SetText(text: string)
@@ -12,7 +11,7 @@ function ExampleService:SetText(text: string)
 	print("Set text to:", text)
 end
 
-function ExampleService.Client:SetText(player: Player, text: string)
+function ExampleService.Client:SetText(_, text: string)
 	self.Server.Text = text
 	print("Set text from client to:", text)
 end

@@ -2,9 +2,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local ManagerCollection = require(ReplicatedStorage:WaitForChild("KnitManagerCollection") :: ModuleScript)
 
-local ExampleManager = ManagerCollection.CreateManager({
+ManagerCollection.CreateManager({
 	Name = "ExampleManager",
-	Client = {},
 })
 
 task.desynchronize()
