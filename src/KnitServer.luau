@@ -236,6 +236,8 @@ function KnitServer.GetService(serviceName: string): Service
 	return assert(services[serviceName], 'Could not find service "' .. serviceName .. '"') :: Service
 end
 
+KnitServer.GetManager = KnitServer.ManagerCollection.GetManager
+
 --[=[
 	@return SIGNAL_MARKER
 	Returns a marker that will transform the current key into
@@ -351,8 +353,6 @@ function KnitServer.Start(options: KnitOptions?)
 	end
 
 	return Promise.new(function(resolve)
-		KnitServer.ManagerCollection._start()
-
 		local knitMiddleware = selectedOptions.Middleware or {}
 
 		-- Bind remotes:
@@ -390,6 +390,8 @@ function KnitServer.Start(options: KnitOptions?)
 		resolve(Promise.all(promisesInitServices))
 	end):andThen(function()
 		-- Start:
+		KnitServer.ManagerCollection._setup(KnitServer)
+
 		for _, service in pairs(services) do
 			if type(service.KnitStart) == "function" then
 				task.spawn(function()
@@ -398,8 +400,6 @@ function KnitServer.Start(options: KnitOptions?)
 				end)
 			end
 		end
-
-		KnitServer.ManagerCollection._start()
 
 		startedComplete = true
 		onStartedComplete:Fire()

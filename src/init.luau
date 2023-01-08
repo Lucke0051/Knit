@@ -6,10 +6,5 @@ else
 		KnitServer:Destroy()
 	end
 
-	local ManagerCollection = script:FindFirstChild("ManagerCollection")
-	if ManagerCollection then
-		ManagerCollection:Destroy()
-	end
-
 	return require(script.KnitClient)
 end

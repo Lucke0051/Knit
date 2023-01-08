@@ -1,12 +1,22 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 
-local ManagerCollection = require(ReplicatedStorage.Packages.Knit).ManagerCollection
+local ManagerCollection = require(ServerScriptService:WaitForChild("KnitManagerCollection") :: ModuleScript)
 
 local ExampleManager = ManagerCollection.CreateManager({
 	Name = "ExampleManager",
 	Client = {},
 })
 
-function ExampleManager:KnitStart()
-	local ExampleService = ManagerCollection.GetService("ExampleService")
+task.desynchronize()
+
+function ExampleManager:ExampleMethod(test: string)
+	print(test)
 end
+
+function ExampleManager:GetText()
+	task.desynchronize()
+	return "the best text"
+end
+
+local ExampleService = ManagerCollection.GetService("ExampleService")
+ExampleService:SetText("no world")

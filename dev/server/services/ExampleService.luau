@@ -12,7 +12,20 @@ function ExampleService:SetText(text: string)
 	print("Set text to:", text)
 end
 
-function ExampleService.Client:GetTest()
+function ExampleService.Client:SetText(player: Player, text: string)
+	self.Server.Text = text
+	print("Set text from client to:", text)
+end
+
+function ExampleService:GetText()
+	return self.Text
+end
+
+function ExampleService.Client:GetManagersText()
+	return self.Server.ExampleManager.Answer:GetText()
+end
+
+function ExampleService.Client:GetText()
 	return self.Server.Text
 end
 
@@ -20,6 +33,8 @@ function ExampleService:KnitInit()
 	self.Text = "hello"
 end
 
-function ExampleService:KnitStart() end
+function ExampleService:KnitStart()
+	self.ExampleManager = Knit.GetManager("ExampleManager")
+end
 
 return ExampleService
