@@ -8,12 +8,11 @@ Similarly to [services] and [controllers], this fork implements a new concept, m
 Current manager limitations:
 - No direct client <-> (nor ->) manager communication
 - Managers do not fully respect the ``KnitInit`` & ``KnitStart`` lifecycle
-- Methods are first "connected" in serial (rather than ``:ConnectParallel``) which requires the user to call ``task.synchronize()``. This also results in more context switches than needed.
 
 ### Lifecycle
 (Registration & creation are used interchangeably)
 
-Managers will not be registered before ``KnitInit``, but they may register before or after ``KnitStart``. A manager is ready to access [services] and [controllers] as soon as a manager is registered.
+Managers will not be registered before ``KnitInit``, but they may register before or after ``KnitStart``. A manager is ready to access [services] and [controllers] as soon as a manager is registered. You may ``GetManager``s in ``KnitStart``, but it is **not** safe to access manager methods in ``KnitStart``, nor ``KnitInit``.
 
 ``KnitManagerCollection`` will not be parented to ``ServerScriptService`` (or ``ReplicatedStorage`` on clients) until it is ready, ``WaitForChild`` will yield until the module has been parented.
 
@@ -50,16 +49,24 @@ If you ran the following code in a manager, the method would be called, but all 
 local ExampleService = ManagerCollection.GetService("ExampleService")
 ExampleService:Hello("world")
 ```
-If you want to get the return values, you must access the method via the ``Answer`` subtable, this tells the ``ManagerCollection`` that you want the return values. It is important that you are aware that this will yield until due to the nature of ``BindableFunctions`` that are used under the hood when calling via the ``Answer`` subtable.
+If you want to get the return values, you must access the method via the ``Answer`` subtable, this tells the ``ManagerCollection`` that you want the return values. It is important that you are aware that this will yield until due to the nature of ``BindableFunction``s that are used under the hood when calling via the ``Answer`` subtable.
 ```lua
 local ExampleService = ManagerCollection.GetService("ExampleService")
 local receivedData = ExampleService.Answer:Hello("world")
 ```
 Make sure you only use the ``Answer`` subtable when you really need to.
 
+
+If you want to connect a method in a ``Manager`` directly in parallel, use the ``Parallel`` subtable. You cannot get return values from ``Parallel`` methods.
+```lua
+local Manager = ManagerCollection.GetManager("OtherManager")
+Manager.Parallel:Hello("world")
+```
+Note that the ``Parallel`` subtable is only avalible on ``Manager``s.
+
 # API
 ## ManagerCollection
-The ``ManagerCollection`` should only be accessed from ``Managers``.
+The ``ManagerCollection`` should only be accessed from ``Manager``s.
 
 Access the ``ManagerCollection`` on the server via:
 ```lua
@@ -86,7 +93,7 @@ local ExampleController = ManagerCollection.GetController("ExampleController")
 local receivedData = ExampleController.Answer:Hello("world")
 ```
 ### ManagerCollection.GetManager(managerName: string)
-Used to access other ``Managers`` from a manager, does not travel through client <-> server.
+Used to access other ``Manager``s from a manager, does not travel through client <-> server.
 Example:
 ```lua
 local OtherManager = ManagerCollection.GetManager("OtherManager")
@@ -95,7 +102,7 @@ OtherManager:Hello("world")
 ### ManagerCollection.CreateManager(manager: Manager)
 Runs in a synchronized context.
 
-Used to create/register a manager. Works similarly to [services] and [controllers].
+Used to create/register a ``Manager``. Works similarly to [services] and [controllers].
 Example:
 ```lua
 local ExampleManager = ManagerCollection.CreateManager({

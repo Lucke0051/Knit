@@ -34,6 +34,7 @@ end
 
 function ExampleService:KnitStart()
 	self.ExampleManager = Knit.GetManager("ExampleManager")
+	self.ExampleManager.Parallel:Print("in parallel: " .. self.Text)
 end
 
 return ExampleService

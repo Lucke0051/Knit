@@ -13,6 +13,10 @@ function ExampleManager:ExampleMethod(test: string)
 	print(test)
 end
 
+function ExampleManager:Print(text: string)
+	print(text)
+end
+
 function ExampleManager:GetText()
 	task.desynchronize()
 	return "the best text"

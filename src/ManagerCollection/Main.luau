@@ -42,7 +42,7 @@ function ManagerCollection.GetComm(commKind: string, commName: string)
 		__index = function(_, key: any)
 			return function(selfPerhaps, ...)
 				task.synchronize()
-				if selfPerhaps == proxyTable then
+				if selfPerhaps == proxyTable.Answer then
 					return commAnswerMethod:Invoke(commKind, commName, key, true, ...)
 				else
 					return commAnswerMethod:Invoke(commKind, commName, key, false, ...)
@@ -75,10 +75,21 @@ function ManagerCollection.CreateManager(newManager: Manager): Manager
 	local commEvent: BindableEvent = Instance.new("BindableEvent")
 	commEvent.Name = "CommEvent"
 
+	local commParallelEvent: BindableEvent = Instance.new("BindableEvent")
+	commParallelEvent.Name = "CommParallelEvent"
+
 	local commFunction: BindableFunction = Instance.new("BindableFunction")
 	commFunction.Name = "CommFunction"
 
 	commEvent.Event:Connect(function(key: any, prefixSelf: boolean, ...)
+		if prefixSelf then
+			newManager[key](newManager, ...)
+		else
+			newManager[key](...)
+		end
+	end)
+
+	commParallelEvent.Event:ConnectParallel(function(key: any, prefixSelf: boolean, ...)
 		if prefixSelf then
 			newManager[key](newManager, ...)
 		else
@@ -98,6 +109,7 @@ function ManagerCollection.CreateManager(newManager: Manager): Manager
 	commFolder.Name = newManager.Name
 
 	commEvent.Parent = commFolder
+	commParallelEvent.Parent = commFolder
 	commFunction.Parent = commFolder
 	commFolder.Parent = script.ManagerComms
 
@@ -111,10 +123,12 @@ function ManagerCollection.GetManager(managerName: string)
 
 	local managerComms: Folder = script.ManagerComms:WaitForChild(managerName)
 	local commEvent: BindableEvent = (managerComms :: any).CommEvent
+	local commParallelEvent: BindableEvent = (managerComms :: any).CommParallelEvent
 	local commFunction: BindableFunction = (managerComms :: any).CommFunction
 
 	local proxyTable = {
 		Answer = {},
+		Parallel = {},
 	}
 
 	setmetatable(proxyTable, {
@@ -136,7 +150,7 @@ function ManagerCollection.GetManager(managerName: string)
 		__index = function(_, key: any)
 			return function(selfPerhaps, ...)
 				task.synchronize()
-				if selfPerhaps == proxyTable then
+				if selfPerhaps == proxyTable.Answer then
 					return commFunction:Invoke(key, true, ...)
 				else
 					return commFunction:Invoke(key, false, ...)
@@ -145,6 +159,21 @@ function ManagerCollection.GetManager(managerName: string)
 		end,
 		__newindex = function()
 			error("Cannot set values on service answer proxies!")
+		end,
+	})
+
+	setmetatable(proxyTable.Parallel, {
+		__index = function(_, key: any)
+			return function(selfPerhaps, ...)
+				if selfPerhaps == proxyTable.Parallel then
+					commParallelEvent:Fire(key, true, ...)
+				else
+					commParallelEvent:Fire(key, false, ...)
+				end
+			end
+		end,
+		__newindex = function()
+			error("Cannot set values on service parallel proxies!")
 		end,
 	})
 
