@@ -9,13 +9,13 @@ dependencies = []
 
 [[package]]
 name = "lucke0051/knit"
-version = "1.0.0"
-dependencies = [["Comm", "sleitnick/comm@0.3.1"], ["Promise", "evaera/promise@4.0.0"], ["Signal", "sleitnick/signal@1.2.1"]]
+version = "1.1.1"
+dependencies = [["Comm", "sleitnick/comm@0.3.1"], ["Promise", "evaera/promise@4.0.0"], ["Signal", "sleitnick/signal@1.5.0"]]
 
 [[package]]
 name = "sleitnick/comm"
 version = "0.3.1"
-dependencies = [["Option", "sleitnick/option@1.0.4"], ["Promise", "evaera/promise@4.0.0"], ["Signal", "sleitnick/signal@1.2.1"]]
+dependencies = [["Option", "sleitnick/option@1.0.4"], ["Promise", "evaera/promise@4.0.0"], ["Signal", "sleitnick/signal@1.5.0"]]
 
 [[package]]
 name = "sleitnick/option"
@@ -24,5 +24,5 @@ dependencies = []
 
 [[package]]
 name = "sleitnick/signal"
-version = "1.2.1"
+version = "1.5.0"
 dependencies = []

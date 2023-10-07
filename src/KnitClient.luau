@@ -1,3 +1,4 @@
+--!native
 --[=[
 	@interface Middleware
 	.Inbound ClientMiddleware?

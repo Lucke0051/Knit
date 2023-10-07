@@ -1,3 +1,5 @@
+--!native
+
 local RunService = game:GetService("RunService")
 
 type Manager = {
@@ -5,7 +7,7 @@ type Manager = {
 	KnitStart: ((Manager) -> ())?,
 }
 
-local managers: { [string]: (Manager | true) } = {}
+local managers: { [string]: Manager | true } = {}
 
 local ManagerCollection = {}
 
